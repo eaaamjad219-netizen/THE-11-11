@@ -8,7 +8,7 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
-## Build 0.5
+## Build 0.6
 - Ambient lighting effects in the lobby and corridor, including soft glow drift, chandelier flicker and a moving light sweep.
 - Hotspots appear with a staggered entrance animation.
 - Dialogue panels and choice buttons animate when updated.
