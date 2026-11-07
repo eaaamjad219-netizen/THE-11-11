@@ -60,20 +60,21 @@ function setupAmbience(){
 function playAmbientNote(){
  if(!soundEnabled||!audioContext||!ambienceMaster)return;
  const patterns={
-  lobby:[261.63,329.63,392,329.63,293.66,349.23,440,349.23],
-  corridor:[220,261.63,329.63,293.66,246.94,293.66,369.99,329.63],
-  room:[196,246.94,293.66,246.94,220,261.63,329.63,293.66]
+  lobby:[392,0,349.23,293.66,0,329.63,261.63,0,329.63,392,0,440,392,0,329.63,293.66],
+  corridor:[329.63,0,293.66,246.94,0,261.63,220,0,246.94,293.66,0,329.63,293.66,0,261.63,246.94],
+  room:[293.66,0,261.63,220,0,246.94,196,0,220,246.94,0,293.66,261.63,0,246.94,220]
  };
  const notes=patterns[state.scene]||patterns.lobby;
  const frequency=notes[ambienceStep%notes.length];ambienceStep++;
+ if(!frequency)return;
  const now=audioContext.currentTime;
  const osc=audioContext.createOscillator(),gain=audioContext.createGain();
- osc.type="sine";osc.frequency.setValueAtTime(frequency,now);
+ osc.type="triangle";osc.frequency.setValueAtTime(frequency,now);
  gain.gain.setValueAtTime(0.0001,now);
- gain.gain.exponentialRampToValueAtTime(0.026,now+.12);
- gain.gain.exponentialRampToValueAtTime(0.0001,now+1.45);
+ gain.gain.exponentialRampToValueAtTime(0.018,now+.025);
+ gain.gain.exponentialRampToValueAtTime(0.0001,now+.62);
  osc.connect(gain);gain.connect(ambienceMaster);
- osc.start(now);osc.stop(now+1.5);
+ osc.start(now);osc.stop(now+.66);
 }
 function updateAmbienceScene(){ambienceStep=0;}
 function updateAmbienceVolume(){
