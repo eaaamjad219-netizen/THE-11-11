@@ -68,3 +68,9 @@
 .photo-close{position:absolute;top:10px;right:10px;z-index:2;background:#171519;border:1px solid #c6a56a;color:#f1d49c;padding:7px 10px;cursor:pointer}
 .photo-reveal:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,#fff2 48%,transparent 60%);transform:translateX(-120%);animation:photoShine 1.4s ease .5s}
 @keyframes photoShine{to{transform:translateX(120%)}}
+
+
+/* Build 0.8 — optional synthesized sound controls */
+#soundBtn{min-width:92px;font-size:10px}
+#soundBtn[aria-pressed="true"]{border-color:#9bba91;color:#b9d3ae;box-shadow:0 0 14px #9bba9120}
+@media(max-width:420px){.top-actions{gap:7px}#soundBtn{padding:8px 9px;min-width:0}}
