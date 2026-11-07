@@ -8,6 +8,11 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
+## Build 1.1
+- Added layered scene details to the hotel lobby, east corridor and Room 11: architectural pillars, floor runner, distant door, wall lamps, bed, bedside light, mirror and window.
+- Scene details are created per location and adapt to smaller mobile screens.
+- Existing clue hotspots, mysterious guest interaction, audio controls and saved progress remain in place.
+
 ## Build 0.9
 - Added optional, gentle ambient tones that change by location: lobby, corridor and Room 11.
 - Added a volume slider; sound enablement and volume preference are saved locally.
