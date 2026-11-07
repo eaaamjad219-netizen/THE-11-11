@@ -26,6 +26,8 @@ function render(){
  const info=sceneInfo[state.scene];$("sceneTitle").textContent=info.title[language];$("sceneLabel").textContent=info.label[language];const clock=$("clock");clock.classList.remove("clock-tick");clock.textContent=formatClock();void clock.offsetWidth;clock.classList.add("clock-tick");
  $("sceneArt").className="scene-art "+info.art;
  $("sceneArt").querySelectorAll(".hotspot").forEach(el=>el.remove());
+ const oldDoor=$("sceneArt").querySelector(".room-door");if(oldDoor)oldDoor.remove();
+ if(state.scene==="room"){const door=document.createElement("div");door.className="room-door";door.setAttribute("aria-hidden","true");const panel=document.createElement("div");panel.className="door-panel";const handle=document.createElement("span");handle.className="door-handle";door.append(panel,handle);$("sceneArt").appendChild(door);window.setTimeout(()=>door.classList.add("door-opening"),180);}
  info.hotspots.forEach((id,index)=>{const b=document.createElement("button");b.className="hotspot "+({clock:"hs-clock",ledger:"hs-book",keys:"hs-keys",portrait:"hs-clock",scratch:"hs-book",box:"hs-keys"}[id]);b.style.animationDelay=`${index*110}ms, ${index*110+600}ms`;b.type="button";b.dataset.clue=id;b.setAttribute("aria-label",clues[id][language==="ar"?"nameAr":"nameEn"]);b.textContent=({clock:"⌚",ledger:"▤",keys:"⚿",portrait:"▧",scratch:"✎",box:"▣"}[id]);b.addEventListener("click",()=>inspect(id));$("sceneArt").appendChild(b);});
  document.querySelectorAll(".location-btn").forEach(b=>{b.classList.toggle("active",b.dataset.scene===state.scene);b.disabled=b.dataset.scene==="room"&&!state.roomUnlocked;b.classList.toggle("unlocked",b.dataset.scene==="room"&&state.roomUnlocked);});
  $("clueCount").textContent=state.clues.length+" / 6";
