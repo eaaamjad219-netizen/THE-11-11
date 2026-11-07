@@ -8,6 +8,12 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
+## Build 1.3
+- Added an interactive four-digit lock puzzle to the box in Room 11.
+- The clue points players toward the repeated 11:11 time; entering 1111 opens the box and reveals a new story note.
+- Chapter One completion now requires all six clues and solving the room puzzle.
+- Puzzle completion is saved locally and remains solved when continuing an older save.
+
 ## Build 1.2
 - Added a real Key 11 discovery in the east corridor after meeting the mysterious guest.
 - Room 11 now requires both four collected clues and Key 11; the key can be collected earlier and used once the clue requirement is met.
