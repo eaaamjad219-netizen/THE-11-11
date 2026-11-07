@@ -8,6 +8,12 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
+## Build 0.9
+- Added optional, gentle ambient tones that change by location: lobby, corridor and Room 11.
+- Added a volume slider; sound enablement and volume preference are saved locally.
+- Ambient sound starts only after sound is enabled, and scene changes blend smoothly.
+- Ambient audio is synthesized with the Web Audio API; no external audio files are required.
+
 ## Build 0.8
 - Added optional sound effects generated with the Web Audio API: clue discovery, location transitions, Room 11 door reveal and photograph inspection.
 - Added an Arabic/English sound toggle; sound is off unless enabled by the player and the preference is saved locally.
