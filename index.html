@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101114">
+  <meta name="description" content="THE 11:11 — لعبة غموض وتحقيق">
+  <title>THE 11:11</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <span class="brand">NIGHTFALL STUDIOS</span>
+      <button id="langBtn" class="quiet-btn" type="button">EN</button>
+    </header>
+
+    <section id="startScreen" class="screen start-screen">
+      <div class="eyebrow">A MYSTERY THAT REPEATS</div>
+      <h1>THE <span>11:11</span></h1>
+      <p class="subtitle" data-ar="كل ليلة تخبّي حكاية… لكن هذه الليلة لا تنتهي." data-en="Every night hides a story… but this night never ends.">كل ليلة تخبّي حكاية… لكن هذه الليلة لا تنتهي.</p>
+      <button id="startBtn" class="primary-btn" type="button" data-ar="ابدأ التحقيق" data-en="Begin investigation">ابدأ التحقيق</button>
+      <p class="start-note" data-ar="الفصل الأول · الفندق القديم" data-en="Chapter One · The Old Hotel">الفصل الأول · الفندق القديم</p>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen hidden">
+      <div class="game-heading">
+        <div>
+          <div class="eyebrow" data-ar="الفصل الأول" data-en="CHAPTER ONE">الفصل الأول</div>
+          <h2 data-ar="ردهة الفندق" data-en="The Hotel Lobby">ردهة الفندق</h2>
+        </div>
+        <div class="clock-box"><span id="clock">07:00 PM</span><small data-ar="الوقت داخل اللعبة" data-en="IN-GAME TIME">الوقت داخل اللعبة</small></div>
+      </div>
+
+      <div class="scene">
+        <div class="scene-glow"></div>
+        <div class="scene-label" data-ar="الفندق — الطابق الأرضي" data-en="THE HOTEL — GROUND FLOOR">الفندق — الطابق الأرضي</div>
+        <div class="scene-art" aria-label="Old hotel lobby illustration">
+          <div class="arch"></div><div class="window"></div><div class="window second"></div>
+          <div class="chandelier">✦</div>
+          <div class="desk"><span>RECEPTION</span></div>
+          <button class="hotspot hs-clock" data-clue="clock" type="button" aria-label="Inspect clock">⌚</button>
+          <button class="hotspot hs-book" data-clue="book" type="button" aria-label="Inspect ledger">▤</button>
+          <button class="hotspot hs-keys" data-clue="keys" type="button" aria-label="Inspect keys">⚿</button>
+        </div>
+        <p class="scene-hint" data-ar="اضغط على الأشياء المضيئة لفحصها." data-en="Select the glowing objects to inspect them.">اضغط على الأشياء المضيئة لفحصها.</p>
+      </div>
+
+      <section class="dialogue-panel">
+        <div class="panel-top"><span class="dot"></span><span id="speaker" data-ar="ملاحظات المحقق" data-en="INVESTIGATOR'S NOTES">ملاحظات المحقق</span></div>
+        <p id="dialogue" data-ar="وصلت إلى الفندق قبل الغروب بقليل. المكان هادئ أكثر من اللازم… وهناك شيء غير طبيعي في هذه الليلة." data-en="I arrived just before sunset. The place is too quiet… something feels wrong tonight.">وصلت إلى الفندق قبل الغروب بقليل. المكان هادئ أكثر من اللازم… وهناك شيء غير طبيعي في هذه الليلة.</p>
+      </section>
+
+      <section class="journal">
+        <div class="journal-head"><h3 data-ar="دفتر الأدلة" data-en="CASE NOTES">دفتر الأدلة</h3><span id="clueCount">0 / 3</span></div>
+        <ul id="clueList"><li class="empty" data-ar="لم تجمع أي دليل بعد." data-en="No clues collected yet.">لم تجمع أي دليل بعد.</li></ul>
+      </section>
+    </section>
+
+    <footer>THE 11:11 <span>·</span> DEMO BUILD 0.1</footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
