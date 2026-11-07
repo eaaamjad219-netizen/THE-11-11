@@ -8,20 +8,20 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
-## Current prototype
-- Responsive layout for desktop and mobile.
+## Build 0.3
+- Responsive interface for desktop and mobile.
 - Arabic and English interface toggle.
-- First hotel-lobby scene.
-- Three clickable objects that reveal clues.
-- A simple evidence notebook.
-
-## Next milestones
-1. Add character dialogue and a working investigation flow.
-2. Add the repeating-day timeline and save progress.
-3. Add connected locations, puzzles and multiple endings.
-4. Test on mobile and package as an Android APK.
+- Three connected hotel locations: lobby, east corridor and Room 11.
+- Six discoverable clues and an evidence notebook.
+- Room 11 unlocks after collecting four clues.
+- The in-game clock stops exactly at 11:11 PM; the next interaction begins a new loop while keeping collected clues.
+- A Chapter One completion scene becomes available after all six clues are collected.
+- Progress is saved locally in the browser.
 
 ## Project structure
 - `index.html` — game screens and interface.
 - `style.css` — visual design and responsive layout.
-- `game.js` — interactions, language toggle and clue collection.
+- `game.js` — interactions, time loop, evidence and save system.
+
+## Note
+This is still an early playable prototype. Save data is stored in the browser on the device used to play.
