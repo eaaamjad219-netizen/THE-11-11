@@ -5,7 +5,7 @@
   "description": "THE 11:11 mystery game",
   "scripts": {
     "build:android": "cap sync android",
-    "build:windows": "electron-builder --win nsis"
+    "build:windows": "electron-builder --win nsis --publish never"
   },
   "dependencies": {
     "@capacitor/android": "^6.2.1",
