@@ -113,7 +113,7 @@ function playSound(kind){
  else if(kind==="photo"){tone(ctx,520,now,.28,.025,"sine");tone(ctx,780,now+.16,.42,.022,"sine");}
 }
 
-function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));$("saveStatus").textContent=t("● محفوظ","● Saved");}catch(e){$("saveStatus").textContent=t("● لم يُحفظ","● Not saved");}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));$("saveStatus").textContent=t("● محفوظ","● Saved");const continueButton=$("continueBtn");if(continueButton)continueButton.classList.remove("hidden");}catch(e){$("saveStatus").textContent=t("● لم يُحفظ","● Not saved");}}
 function load(){
  try{
   const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;
