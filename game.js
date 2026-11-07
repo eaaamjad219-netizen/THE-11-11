@@ -96,9 +96,24 @@ function playSound(kind){
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));$("saveStatus").textContent=t("● محفوظ","● Saved");}catch(e){$("saveStatus").textContent=t("● لم يُحفظ","● Not saved");}}
 function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.clues)||!sceneInfo[data.scene])return false;state={...initialState(),...data};return true;}catch(e){return false;}}
 function formatClock(){const h=Math.floor(state.minutes/60)%24,m=state.minutes%60;const suffix=h>=12?"PM":"AM";return String(h%12||12).padStart(2,"0")+":"+String(m).padStart(2,"0")+" "+suffix;}
+function buildSceneDetails(){
+ const art=$("sceneArt");
+ art.querySelectorAll(".scene-detail").forEach(el=>el.remove());
+ const details={
+  lobby:["pillar left","pillar right","rug","lamp"],
+  corridor:["far-door","sconce left","sconce right","runner"],
+  room:["window","bed","bedside","mirror","rug"]
+ };
+ (details[state.scene]||[]).forEach(name=>{
+  const el=document.createElement("div");
+  el.className="scene-detail "+state.scene+"-detail "+name;
+  el.setAttribute("aria-hidden","true");
+  art.appendChild(el);
+ });
+}
 function render(){
  const info=sceneInfo[state.scene];$("sceneTitle").textContent=info.title[language];$("sceneLabel").textContent=info.label[language];const clock=$("clock");clock.classList.remove("clock-tick");clock.textContent=formatClock();void clock.offsetWidth;clock.classList.add("clock-tick");
- $("sceneArt").className="scene-art "+info.art;updateAmbienceScene();
+ $("sceneArt").className="scene-art "+info.art;updateAmbienceScene();buildSceneDetails();
  $("sceneArt").querySelectorAll(".hotspot").forEach(el=>el.remove());
  const oldDoor=$("sceneArt").querySelector(".room-door");if(oldDoor)oldDoor.remove();
  if(state.scene==="room"){const door=document.createElement("div");door.className="room-door";door.setAttribute("aria-hidden","true");const panel=document.createElement("div");panel.className="door-panel";const handle=document.createElement("span");handle.className="door-handle";door.append(panel,handle);$("sceneArt").appendChild(door);window.setTimeout(()=>door.classList.add("door-opening"),180);}
