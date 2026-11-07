@@ -5,3 +5,34 @@
 
 /* Build 0.4 — cinematic location transitions */
 .scene{overflow:hidden}.scene-art{will-change:opacity,transform,filter}.scene-art.scene-leaving{animation:sceneLeave .24s cubic-bezier(.65,0,.85,.35) both;pointer-events:none}.scene-art.scene-entering{animation:sceneEnter .68s cubic-bezier(.18,.72,.22,1) both}@keyframes sceneLeave{0%{opacity:1;transform:scale(1);filter:blur(0) brightness(1)}100%{opacity:0;transform:scale(1.035);filter:blur(7px) brightness(.35)}}@keyframes sceneEnter{0%{opacity:0;transform:scale(.965) translateY(10px);filter:blur(8px) brightness(.45)}55%{opacity:1;filter:blur(1px) brightness(.8)}100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0) brightness(1)}}.location-btn{transition:background .25s,border-color .25s,color .25s,transform .25s}.location-btn:not(:disabled):hover{transform:translateY(-2px);background:#29242a}.scene-transitioning .location-nav{pointer-events:none}.scene-transitioning .dialogue-panel{opacity:.72;transition:opacity .2s}.dialogue-panel{transition:opacity .35s}@media(prefers-reduced-motion:reduce){.scene-art.scene-leaving,.scene-art.scene-entering{animation-duration:.01ms}.location-btn,.dialogue-panel{transition:none}}
+
+
+/* Build 0.5 — living atmosphere, clue reveals and interface motion */
+.scene-art{isolation:isolate}
+.scene-glow{animation:glowDrift 8s ease-in-out infinite alternate}
+@keyframes glowDrift{0%{transform:translate3d(-12px,5px,0) scale(.88);opacity:.55}100%{transform:translate3d(18px,-12px,0) scale(1.16);opacity:1}}
+.chandelier{animation:lightFlicker 5.5s ease-in-out infinite;text-shadow:0 0 14px #f3bd6870,0 0 34px #f3bd6840}
+@keyframes lightFlicker{0%,18%,22%,57%,61%,100%{opacity:.9;filter:brightness(1)}20%,59%{opacity:.55;filter:brightness(.7)}}
+.art-window{overflow:hidden}
+.art-window:before{content:"";position:absolute;inset:-40% -80%;background:linear-gradient(105deg,transparent 42%,#f2c58a20 49%,#f2c58a08 54%,transparent 62%);transform:translateX(-65%);animation:windowSweep 9s ease-in-out infinite}
+@keyframes windowSweep{0%,35%{transform:translateX(-65%)}75%,100%{transform:translateX(65%)}}
+.corridor-art:after{content:"";position:absolute;z-index:1;top:0;bottom:0;left:-35%;width:28%;background:linear-gradient(90deg,transparent,#d7a36b12,transparent);transform:skewX(-12deg);animation:corridorLight 7s ease-in-out infinite}
+@keyframes corridorLight{0%,28%{left:-35%;opacity:0}45%{opacity:1}76%,100%{left:115%;opacity:0}}
+.room-art:after{content:"";position:absolute;z-index:1;inset:0;background:radial-gradient(ellipse at 50% 52%,transparent 15%,#08070a8c 100%);pointer-events:none}
+.hotspot{opacity:0;animation:hotspotArrive .55s cubic-bezier(.2,.8,.25,1) forwards,pulse 2.4s ease-in-out infinite 0.6s}
+@keyframes hotspotArrive{0%{opacity:0;transform:translateY(12px) scale(.65)}70%{opacity:1;transform:translateY(-2px) scale(1.08)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.hotspot:hover{transform:scale(1.1);transition:transform .2s,background .2s}
+.dialogue-panel.dialogue-updated{animation:dialogueReveal .42s cubic-bezier(.2,.75,.25,1)}
+@keyframes dialogueReveal{0%{opacity:.35;transform:translateY(9px)}100%{opacity:1;transform:translateY(0)}}
+.choice-btn{animation:choiceReveal .35s ease both;transition:transform .2s,background .2s,border-color .2s}
+.choice-btn:hover{transform:translateY(-2px);border-color:var(--gold);background:#403329}
+@keyframes choiceReveal{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.journal li:not(.empty){animation:clueReveal .38s ease both}
+@keyframes clueReveal{from{opacity:0;transform:translateX(10px);filter:blur(3px)}to{opacity:1;transform:translateX(0);filter:blur(0)}}
+.location-btn[data-scene="room"].unlocked{animation:roomUnlock 1.1s ease 1}
+@keyframes roomUnlock{0%,100%{box-shadow:0 0 0 #c6a56a00}45%{box-shadow:0 0 22px #c6a56a65;border-color:var(--gold);color:#f4d69f}}
+#clock.clock-tick{animation:clockTick .35s ease}
+@keyframes clockTick{0%{transform:translateY(4px);opacity:.35}100%{transform:translateY(0);opacity:1}}
+.primary-btn,.quiet-btn,.text-btn,.location-btn{transition:transform .2s ease,background .2s ease,border-color .2s ease,color .2s ease}
+.primary-btn:active,.quiet-btn:active,.location-btn:active{transform:scale(.97)}
+@media(prefers-reduced-motion:reduce){.scene-glow,.chandelier,.art-window:before,.corridor-art:after,.hotspot,.dialogue-panel.dialogue-updated,.choice-btn,.journal li:not(.empty),.location-btn[data-scene="room"].unlocked,#clock.clock-tick{animation:none!important}.primary-btn,.quiet-btn,.text-btn,.location-btn,.choice-btn{transition:none!important}}
