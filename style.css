@@ -74,3 +74,11 @@
 #soundBtn{min-width:92px;font-size:10px}
 #soundBtn[aria-pressed="true"]{border-color:#9bba91;color:#b9d3ae;box-shadow:0 0 14px #9bba9120}
 @media(max-width:420px){.top-actions{gap:7px}#soundBtn{padding:8px 9px;min-width:0}}
+
+
+/* Build 0.9 — optional location-based ambient sound */
+.volume-control{display:flex;align-items:center;gap:6px;color:var(--gold);font-size:14px}
+#ambienceVolume{width:76px;height:4px;accent-color:var(--gold);cursor:pointer}
+#ambienceVolume:focus-visible{outline:2px solid var(--gold);outline-offset:5px}
+@media(max-width:520px){.top-actions{gap:8px}.volume-control{gap:4px}#ambienceVolume{width:54px}}
+@media(prefers-reduced-motion:reduce){#ambienceVolume{scroll-behavior:auto}}
