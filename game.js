@@ -208,7 +208,8 @@ function showChapterOneEnding(){
  content.append(eyebrow,title,message,note,next,close);overlay.append(clock,silhouette,content);art.appendChild(overlay);close.focus();
 }
 function startChapterTwo(){
- state.chapter=2;state.chapter2Clues=[];state.chapter2Solved=false;state.finished=false;state.scene="lobby";state.minutes=22*60+40;save();render();
+ const ending=$("sceneArt").querySelector(".chapter-ending");if(ending)ending.remove();
+ state.chapter=2;state.chapter2Clues=[];state.chapter2Solved=false;state.finished=false;state.scene="lobby";state.minutes=20*60;save();render();
  say(t("تعود إلى الفندق… لكن هذه المرة لا توجد موسيقى ولا أضواء. جهاز تسجيل قديم يعمل وحده خلف مكتب الاستقبال. وعلى شاشته رقم واحد: 03.","You return to the hotel… but this time there is no music and no light. An old recorder is playing by itself behind reception. Its display shows one number: 03."));
 }
 function inspectChapterTwo(id){
