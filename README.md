@@ -1,5 +1,9 @@
 # THE 11:11
 
+## Build 1.8
+- Added the game's cover artwork to the start screen.
+- Updated the visible build number to 1.8.
+
 ## Build 1.7
 - Fixed Chapter Three save restoration so completed progress resumes in the correct chapter.
 - Fixed starting a new game when an older save exists; the Continue option now appears after saving.
