@@ -130,3 +130,9 @@
  .room-detail.mirror{left:4%;width:16%}
 }
 @media(prefers-reduced-motion:reduce){.scene-detail{scroll-behavior:auto}}
+
+
+/* Build 1.2 — the real Key 11 discovery */
+.hs-key11{top:68%;left:48%;border-color:#e8c77f;background:linear-gradient(145deg,#30231b,#161316);box-shadow:0 0 22px #e8b96b88,0 0 5px #fff5;animation:keyGlow 1.8s ease-in-out infinite}
+@keyframes keyGlow{0%,100%{box-shadow:0 0 8px #e8b96b55;transform:rotate(-8deg) scale(.96)}50%{box-shadow:0 0 24px #e8b96bcc;transform:rotate(8deg) scale(1.06)}}
+@media(prefers-reduced-motion:reduce){.hs-key11{animation:none!important}}
