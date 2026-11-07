@@ -8,6 +8,11 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
+## Build 1.2
+- Added a real Key 11 discovery in the east corridor after meeting the mysterious guest.
+- Room 11 now requires both four collected clues and Key 11; the key can be collected earlier and used once the clue requirement is met.
+- Updated saved-game loading so older saves can continue with the new key objective.
+
 ## Build 1.1
 - Added layered scene details to the hotel lobby, east corridor and Room 11: architectural pillars, floor runner, distant door, wall lamps, bed, bedside light, mirror and window.
 - Scene details are created per location and adapt to smaller mobile screens.
