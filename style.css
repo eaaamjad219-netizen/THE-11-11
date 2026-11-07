@@ -182,17 +182,6 @@
 
 
 /* Build 1.6 — final chapter: the truth behind the hotel */
-.hs-tape{}
-.hs-calendar{}
-.hs-mirror{}
-.hs-tape, .hs-calendar, .hs-mirror{}
-.hs-tape{}
-.hs-calendar{}
-.hs-mirror{}
-/* Chapter Three evidence markers */
-.hs-tape{}
-.hs-calendar{}
-.hs-mirror{}
 .chapter-three-ending{background:radial-gradient(ellipse at 50% 38%,#55412d 0%,#211a19 43%,#07070b 100%)}
 .chapter-three-ending .ending-clock{color:#f0d49a;text-shadow:0 0 18px #e6b86e,0 0 48px #bd7945}
 .chapter-three-ending .ending-content{border-color:#d5b17b88}
