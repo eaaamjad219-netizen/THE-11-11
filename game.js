@@ -2,7 +2,7 @@
 "use strict";
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = "the1111-save-v2";
-const initialState = () => ({scene:"lobby",minutes:19*60,clues:[],roomUnlocked:false,loop:1,finished:false});
+const initialState = () => ({scene:"lobby",minutes:19*60,clues:[],roomUnlocked:false,loop:1,finished:false,strangerMet:false,strangerAsked:false});
 let state = initialState();
 let language = "ar";
 let soundEnabled = false;
@@ -103,6 +103,7 @@ function render(){
  const oldDoor=$("sceneArt").querySelector(".room-door");if(oldDoor)oldDoor.remove();
  if(state.scene==="room"){const door=document.createElement("div");door.className="room-door";door.setAttribute("aria-hidden","true");const panel=document.createElement("div");panel.className="door-panel";const handle=document.createElement("span");handle.className="door-handle";door.append(panel,handle);$("sceneArt").appendChild(door);window.setTimeout(()=>door.classList.add("door-opening"),180);}
  info.hotspots.forEach((id,index)=>{const b=document.createElement("button");b.className="hotspot "+({clock:"hs-clock",ledger:"hs-book",keys:"hs-keys",portrait:"hs-clock",scratch:"hs-book",box:"hs-keys"}[id]);b.style.animationDelay=`${index*110}ms, ${index*110+600}ms`;b.type="button";b.dataset.clue=id;b.setAttribute("aria-label",clues[id][language==="ar"?"nameAr":"nameEn"]);b.textContent=({clock:"⌚",ledger:"▤",keys:"⚿",portrait:"▧",scratch:"✎",box:"▣"}[id]);b.addEventListener("click",()=>inspect(id));$("sceneArt").appendChild(b);});
+ if(state.scene==="corridor"&&state.clues.length>=2){const stranger=document.createElement("button");stranger.type="button";stranger.className="stranger-figure";stranger.setAttribute("aria-label",t("تحدث مع النزيل المجهول","Talk to the unknown guest"));stranger.title=t("نزيل مجهول","Unknown guest");stranger.addEventListener("click",talkToStranger);$("sceneArt").appendChild(stranger);}
  document.querySelectorAll(".location-btn").forEach(b=>{b.classList.toggle("active",b.dataset.scene===state.scene);b.disabled=b.dataset.scene==="room"&&!state.roomUnlocked;b.classList.toggle("unlocked",b.dataset.scene==="room"&&state.roomUnlocked);});
  $("clueCount").textContent=state.clues.length+" / 6";
  $("clueList").replaceChildren();
@@ -116,6 +117,30 @@ function advanceTime(){const target=23*60+11;const next=state.minutes+17;if(stat
 function inspect(id){if(!clues[id])return;playSound("clue");const c=clues[id];say(c[language]);if(!state.clues.includes(id)){state.clues.push(id);state.roomUnlocked=state.clues.length>=4;save();render();}
  if(id==="keys"||id==="scratch"){addChoice(t("اذهب إلى الممر","Go to the corridor"),()=>go("corridor"));}if(id==="box"){addChoice(t("افحص الصورة عن قرب","Examine the photograph closely"),showPhotoReveal);addChoice(t("حاول فهم الصورة","Try to understand the photograph"),()=>{if(state.clues.length===6){say(t("تتطابق الصور الستّ في دفتر الأدلة. لم تكن تائهًا في الفندق؛ كنت تحاول تذكّر ما حدث في الليلة الأولى. تظهر على ظهر الصورة الأخيرة عبارة: «اخرج قبل أن تدق الساعة مرة أخرى». انتهى الفصل الأول.","The six photographs align in your case notes. You were never lost in the hotel; you were trying to remember the first night. On the back of the final photo: “Leave before the clock strikes again.” CHAPTER ONE COMPLETE."));state.finished=true;}else{say(t("هناك تفاصيل ناقصة. لا تزال بعض الأدلة خارج الصورة.","Something is missing. Some clues are still out of view."));}save();});}
  advanceTime();}
+function strangerLine(text){say(text);$("speaker").textContent=t("النزيل المجهول","THE UNKNOWN GUEST");}
+function talkToStranger(){
+ playSound("clue");
+ const firstVisit=!state.strangerMet;
+ state.strangerMet=true;save();
+ strangerLine(firstVisit?t("أخيراً وصلت. كنت أعرف أنك ستجد الطريق إلى هنا.","At last. I knew you would find your way here."):t("رجعت؟ تذكّر… الساعة لا تعيد الوقت، بل تعيدك أنت.","You came back? Remember… the clock does not repeat time. It repeats you."));
+ addChoice(t("من أنت؟","Who are you?"),()=>{
+  state.strangerAsked=true;save();
+  strangerLine(t("مجرد نزيل لم يغادر هذا الفندق… مثلك تماماً.","Just a guest who never checked out of this hotel… just like you."));
+  addChoice(t("كيف تعرف اسمي؟","How do you know my name?"),()=>{
+   strangerLine(t("اسمك موجود في الدفتر منذ سنوات. الغريب أنك لا تتذكر أنك كتبتَه.","Your name has been in the ledger for years. The strange part is that you do not remember writing it."));
+   addChoice(t("شنو تبي مني؟","What do you want from me?"),()=>{
+    strangerLine(t("ابحث عن المفتاح رقم 11. وبعدها ستفهم لماذا لا يفتح هذا الباب إلا لك.","Find key number 11. Then you will understand why this door opens only for you."));
+   });
+  });
+ });
+ addChoice(t("لماذا تنتظرني؟","Why are you waiting for me?"),()=>{
+  state.strangerAsked=true;save();
+  strangerLine(t("لأنك في كل مرة تصل إلى 11:11 تنسى ما عرفته. هذه المرة، حاول أن تتذكر.","Because every time you reach 11:11, you forget what you learned. This time, try to remember."));
+  addChoice(t("هل أستطيع الوثوق بك؟","Can I trust you?"),()=>{
+   strangerLine(t("لا تثق بي… ولا بالساعة. ثق بالأدلة التي جمعتها بنفسك.","Do not trust me… and do not trust the clock. Trust the clues you found yourself."));
+  });
+ });
+}
 function showPhotoReveal(){
  playSound("photo");
  const art=$("sceneArt");const old=art.querySelector(".photo-reveal");if(old)old.remove();
