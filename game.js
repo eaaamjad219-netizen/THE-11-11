@@ -9,6 +9,8 @@ let soundEnabled = false;
 let audioContext = null;
 let ambienceMaster = null;
 let ambienceLayers = {};
+let ambienceTimer = null;
+let ambienceStep = 0;
 let ambienceVolume = 0.35;
 try{
  soundEnabled=localStorage.getItem("the1111-sound")==="on";
@@ -51,32 +53,34 @@ function tone(ctx,frequency,start,duration,volume,type="sine",endFrequency=frequ
 }
 function setupAmbience(){
  const ctx=getAudioContext();if(!ctx||ambienceMaster)return;
- ambienceMaster=ctx.createGain();ambienceMaster.gain.value=soundEnabled?ambienceVolume:0.0001;ambienceMaster.connect(ctx.destination);
- const settings={lobby:[110,164.81],corridor:[82.41,123.47],room:[73.42,146.83]};
- Object.entries(settings).forEach(([scene,frequencies])=>{
-  const layer=ctx.createGain();layer.gain.value=0.0001;layer.connect(ambienceMaster);
-  frequencies.forEach((frequency,index)=>{
-   const osc=ctx.createOscillator();const voice=ctx.createGain();
-   osc.type=index===0?"sine":"triangle";osc.frequency.value=frequency;voice.gain.value=index===0?0.55:0.18;
-   osc.connect(voice);voice.connect(layer);osc.start();
-  });
-  ambienceLayers[scene]=layer;
- });
- updateAmbienceScene();
+ ambienceMaster=ctx.createGain();ambienceMaster.gain.value=0.0001;ambienceMaster.connect(ctx.destination);
+ updateAmbienceVolume();
+ if(!ambienceTimer)ambienceTimer=window.setInterval(playAmbientNote,1150);
 }
-function updateAmbienceScene(){
- if(!ambienceMaster||!audioContext)return;
+function playAmbientNote(){
+ if(!soundEnabled||!audioContext||!ambienceMaster)return;
+ const patterns={
+  lobby:[261.63,329.63,392,329.63,293.66,349.23,440,349.23],
+  corridor:[220,261.63,329.63,293.66,246.94,293.66,369.99,329.63],
+  room:[196,246.94,293.66,246.94,220,261.63,329.63,293.66]
+ };
+ const notes=patterns[state.scene]||patterns.lobby;
+ const frequency=notes[ambienceStep%notes.length];ambienceStep++;
  const now=audioContext.currentTime;
- Object.entries(ambienceLayers).forEach(([scene,gain])=>{
-  gain.gain.cancelScheduledValues(now);
-  gain.gain.setTargetAtTime(soundEnabled&&scene===state.scene?0.045:0.0001,now,.9);
- });
+ const osc=audioContext.createOscillator(),gain=audioContext.createGain();
+ osc.type="sine";osc.frequency.setValueAtTime(frequency,now);
+ gain.gain.setValueAtTime(0.0001,now);
+ gain.gain.exponentialRampToValueAtTime(0.026,now+.12);
+ gain.gain.exponentialRampToValueAtTime(0.0001,now+1.45);
+ osc.connect(gain);gain.connect(ambienceMaster);
+ osc.start(now);osc.stop(now+1.5);
 }
+function updateAmbienceScene(){ambienceStep=0;}
 function updateAmbienceVolume(){
  if(!ambienceMaster||!audioContext)return;
  const now=audioContext.currentTime;
  ambienceMaster.gain.cancelScheduledValues(now);
- ambienceMaster.gain.setTargetAtTime(soundEnabled?Math.max(.0001,ambienceVolume):.0001,now,.12);
+ ambienceMaster.gain.setTargetAtTime(soundEnabled?Math.max(.0001,ambienceVolume):.0001,now,.18);
 }
 function playSound(kind){
  if(!soundEnabled)return;
