@@ -82,3 +82,14 @@
 #ambienceVolume:focus-visible{outline:2px solid var(--gold);outline-offset:5px}
 @media(max-width:520px){.top-actions{gap:8px}.volume-control{gap:4px}#ambienceVolume{width:54px}}
 @media(prefers-reduced-motion:reduce){#ambienceVolume{scroll-behavior:auto}}
+
+
+/* Build 1.0 — mysterious guest encounter */
+.stranger-figure{position:absolute;z-index:3;left:calc(50% - 27px);top:24%;width:54px;height:160px;padding:0;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 0 15px #08070b);animation:strangerAppear 1.1s ease both}
+.stranger-figure::before{content:"";position:absolute;left:18px;top:0;width:19px;height:25px;border-radius:50%;background:#09090d;box-shadow:0 0 13px #c6a56a28}
+.stranger-figure::after{content:"";position:absolute;left:3px;top:22px;width:49px;height:137px;background:linear-gradient(90deg,#09090d,#17151a 48%,#08080b);clip-path:polygon(35% 0,66% 0,78% 13%,100% 100%,0 100%,22% 13%);border-radius:40% 40% 0 0}
+.stranger-figure:hover{filter:drop-shadow(0 0 10px #c6a56a99);transform:scale(1.06)}
+.stranger-figure:focus-visible{outline:2px solid var(--gold);outline-offset:6px}
+@keyframes strangerAppear{0%{opacity:0;transform:translateY(10px);filter:blur(5px)}65%{opacity:1;filter:blur(1px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@media(max-width:600px){.stranger-figure{top:22%;transform:scale(.82);transform-origin:top center}.stranger-figure:hover{transform:scale(.88)}}
+@media(prefers-reduced-motion:reduce){.stranger-figure{animation:none!important;transition:none!important}}
