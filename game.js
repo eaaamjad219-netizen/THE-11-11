@@ -7,7 +7,14 @@ let state = initialState();
 let language = "ar";
 let soundEnabled = false;
 let audioContext = null;
-try{soundEnabled=localStorage.getItem("the1111-sound")==="on";}catch(e){}
+let ambienceMaster = null;
+let ambienceLayers = {};
+let ambienceVolume = 0.35;
+try{
+ soundEnabled=localStorage.getItem("the1111-sound")==="on";
+ const savedVolume=Number(localStorage.getItem("the1111-volume"));
+ if(Number.isFinite(savedVolume)&&savedVolume>=0&&savedVolume<=1)ambienceVolume=savedVolume;
+}catch(e){}
 const clues = {
  clock:{ar:"الساعة متوقفة عند 11:11 تماماً. لكن صوت الدقات يأتي من داخل الجدار، لا من الساعة نفسها.",en:"The clock is frozen at exactly 11:11. But the ticking comes from inside the wall, not from the clock.",nameAr:"دقات خلف الجدار",nameEn:"Ticking behind the wall",scene:"lobby"},
  ledger:{ar:"دفتر النزلاء يحمل اسمك في سجل قديم… والتاريخ المكتوب بجانبه هو تاريخ هذه الليلة.",en:"The guest ledger carries your name in an old entry… dated tonight.",nameAr:"تسجيل باسمك في الدفتر",nameEn:"Your name in the ledger",scene:"lobby"},
@@ -42,6 +49,35 @@ function tone(ctx,frequency,start,duration,volume,type="sine",endFrequency=frequ
  gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
  osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+.03);
 }
+function setupAmbience(){
+ const ctx=getAudioContext();if(!ctx||ambienceMaster)return;
+ ambienceMaster=ctx.createGain();ambienceMaster.gain.value=soundEnabled?ambienceVolume:0.0001;ambienceMaster.connect(ctx.destination);
+ const settings={lobby:[110,164.81],corridor:[82.41,123.47],room:[73.42,146.83]};
+ Object.entries(settings).forEach(([scene,frequencies])=>{
+  const layer=ctx.createGain();layer.gain.value=0.0001;layer.connect(ambienceMaster);
+  frequencies.forEach((frequency,index)=>{
+   const osc=ctx.createOscillator();const voice=ctx.createGain();
+   osc.type=index===0?"sine":"triangle";osc.frequency.value=frequency;voice.gain.value=index===0?0.55:0.18;
+   osc.connect(voice);voice.connect(layer);osc.start();
+  });
+  ambienceLayers[scene]=layer;
+ });
+ updateAmbienceScene();
+}
+function updateAmbienceScene(){
+ if(!ambienceMaster||!audioContext)return;
+ const now=audioContext.currentTime;
+ Object.entries(ambienceLayers).forEach(([scene,gain])=>{
+  gain.gain.cancelScheduledValues(now);
+  gain.gain.setTargetAtTime(soundEnabled&&scene===state.scene?0.045:0.0001,now,.9);
+ });
+}
+function updateAmbienceVolume(){
+ if(!ambienceMaster||!audioContext)return;
+ const now=audioContext.currentTime;
+ ambienceMaster.gain.cancelScheduledValues(now);
+ ambienceMaster.gain.setTargetAtTime(soundEnabled?Math.max(.0001,ambienceVolume):.0001,now,.12);
+}
 function playSound(kind){
  if(!soundEnabled)return;
  const ctx=getAudioContext();if(!ctx)return;
@@ -57,7 +93,7 @@ function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return fals
 function formatClock(){const h=Math.floor(state.minutes/60)%24,m=state.minutes%60;const suffix=h>=12?"PM":"AM";return String(h%12||12).padStart(2,"0")+":"+String(m).padStart(2,"0")+" "+suffix;}
 function render(){
  const info=sceneInfo[state.scene];$("sceneTitle").textContent=info.title[language];$("sceneLabel").textContent=info.label[language];const clock=$("clock");clock.classList.remove("clock-tick");clock.textContent=formatClock();void clock.offsetWidth;clock.classList.add("clock-tick");
- $("sceneArt").className="scene-art "+info.art;
+ $("sceneArt").className="scene-art "+info.art;updateAmbienceScene();
  $("sceneArt").querySelectorAll(".hotspot").forEach(el=>el.remove());
  const oldDoor=$("sceneArt").querySelector(".room-door");if(oldDoor)oldDoor.remove();
  if(state.scene==="room"){const door=document.createElement("div");door.className="room-door";door.setAttribute("aria-hidden","true");const panel=document.createElement("div");panel.className="door-panel";const handle=document.createElement("span");handle.className="door-handle";door.append(panel,handle);$("sceneArt").appendChild(door);window.setTimeout(()=>door.classList.add("door-opening"),180);}
@@ -93,7 +129,10 @@ $("startBtn").addEventListener("click",()=>{state=initialState();start();save();
 $("continueBtn").addEventListener("click",()=>start());
 document.querySelectorAll(".location-btn").forEach(b=>b.addEventListener("click",()=>go(b.dataset.scene)));
 $("resetBtn").addEventListener("click",()=>{if(!confirm(t("هل تريد إعادة التحقيق من البداية؟ ستُحذف الأدلة المحفوظة.","Restart the investigation? Saved clues will be erased.")))return;state=initialState();save();render();say(t("بدأت ليلة جديدة… أو ربما ليست جديدة فعلاً.","A new night begins… or perhaps it isn't new at all."));});
-$("soundBtn").addEventListener("click",()=>{soundEnabled=!soundEnabled;try{localStorage.setItem("the1111-sound",soundEnabled?"on":"off");}catch(e){}if(soundEnabled)getAudioContext();updateSoundButton();if(soundEnabled)playSound("clue");});
+$("soundBtn").addEventListener("click",()=>{soundEnabled=!soundEnabled;try{localStorage.setItem("the1111-sound",soundEnabled?"on":"off");}catch(e){}if(soundEnabled){getAudioContext();setupAmbience();}updateSoundButton();updateAmbienceVolume();updateAmbienceScene();if(soundEnabled)playSound("clue");});
+$("ambienceVolume").value=String(Math.round(ambienceVolume*100));
+$("ambienceVolume").addEventListener("input",event=>{ambienceVolume=Number(event.target.value)/100;try{localStorage.setItem("the1111-volume",String(ambienceVolume));}catch(e){}updateAmbienceVolume();});
+if(soundEnabled){getAudioContext();setupAmbience();}
 $("langBtn").addEventListener("click",()=>{language=language==="ar"?"en":"ar";document.documentElement.lang=language;document.documentElement.dir=language==="ar"?"rtl":"ltr";document.body.dir=document.documentElement.dir;$("langBtn").textContent=language==="ar"?"EN":"عربي";updateSoundButton();document.querySelectorAll("[data-ar][data-en]").forEach(el=>el.textContent=el.dataset[language]);render();});
 updateSoundButton();
 if(load())$("continueBtn").classList.remove("hidden");
