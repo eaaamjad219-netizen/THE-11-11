@@ -1,5 +1,10 @@
 # THE 11:11
 
+## Build 1.6
+- Completed Chapter Three, “The Final Truth,” with three new clues across the hotel.
+- Added the final truth-code puzzle (1103), a conclusive ending, and a replay option.
+- Chapter Three progress and its ending are saved and restored.
+
 ## Build 1.5
 - Added a playable Chapter Two, “The Forgotten Night,” unlocked from the Chapter One ending.
 - Introduced three new clues: a tape recording in the lobby, a torn calendar page in the corridor, and strange digits in Room 11's mirror.
