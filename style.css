@@ -165,3 +165,17 @@
 .ending-close:hover,.ending-close:focus-visible{background:#3a2922;outline:2px solid #c6a56a;outline-offset:3px}
 @media(max-width:480px){.chapter-ending{padding:12px}.ending-content{margin-top:55px}.ending-content p{line-height:1.7}.ending-clock{top:5%}}
 @media(prefers-reduced-motion:reduce){.chapter-ending,.ending-clock,.ending-silhouette,.ending-content{animation:none!important}.ending-silhouette{opacity:.9}}
+
+
+/* Build 1.5 — Chapter Two evidence and mirror mystery */
+.hs-tape{top:70%;left:28%;border-color:#b5a17d;background:linear-gradient(145deg,#2b2724,#111116);box-shadow:0 0 18px #d5b17b66}
+.hs-tape:after{content:"▰";font-size:18px;color:#d5b17b}
+.hs-calendar{top:34%;left:70%;border-color:#d8c59d;background:linear-gradient(145deg,#332b25,#111116);box-shadow:0 0 18px #d5b17b66}
+.hs-calendar:after{content:"▦";font-size:18px;color:#e0cda5}
+.hs-mirror{top:38%;left:17%;border-color:#b9c8d0;background:linear-gradient(145deg,#26313a,#111116);box-shadow:0 0 20px #a9c5d866}
+.hs-mirror:after{content:"◈";font-size:20px;color:#d4e4ec}
+.chapter-two-ending{background:radial-gradient(ellipse at 50% 38%,#35414a 0%,#17151b 44%,#050609 100%)}
+.chapter-two-ending .ending-clock{color:#d9e6ed;text-shadow:0 0 18px #8db5c7,0 0 45px #608da4}
+.chapter-two-ending .ending-content{border-color:#9ab5c466}
+.chapter-two-ending .ending-content h2{color:#d9e6ed}
+@media(prefers-reduced-motion:reduce){.hs-tape,.hs-calendar,.hs-mirror{animation:none!important}}
