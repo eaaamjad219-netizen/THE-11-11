@@ -8,7 +8,12 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
-## Build 0.3
+## Build 0.4
+- Cinematic transitions between the lobby, corridor and Room 11: brief fade-out, depth zoom, soft blur and a smooth scene reveal.
+- Navigation is temporarily locked during transitions to prevent overlapping scene changes.
+- Reduced-motion preferences are respected.
+
+## Previous build: 0.3
 - Responsive interface for desktop and mobile.
 - Arabic and English interface toggle.
 - Three connected hotel locations: lobby, east corridor and Room 11.
