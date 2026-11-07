@@ -132,7 +132,9 @@ $("resetBtn").addEventListener("click",()=>{if(!confirm(t("هل تريد إعا�
 $("soundBtn").addEventListener("click",()=>{soundEnabled=!soundEnabled;try{localStorage.setItem("the1111-sound",soundEnabled?"on":"off");}catch(e){}if(soundEnabled){getAudioContext();setupAmbience();}updateSoundButton();updateAmbienceVolume();updateAmbienceScene();if(soundEnabled)playSound("clue");});
 $("ambienceVolume").value=String(Math.round(ambienceVolume*100));
 $("ambienceVolume").addEventListener("input",event=>{ambienceVolume=Number(event.target.value)/100;try{localStorage.setItem("the1111-volume",String(ambienceVolume));}catch(e){}updateAmbienceVolume();});
-if(soundEnabled){getAudioContext();setupAmbience();}
+if(soundEnabled){
+ document.addEventListener("pointerdown",()=>{if(soundEnabled){getAudioContext();setupAmbience();updateAmbienceVolume();}},{once:true});
+}
 $("langBtn").addEventListener("click",()=>{language=language==="ar"?"en":"ar";document.documentElement.lang=language;document.documentElement.dir=language==="ar"?"rtl":"ltr";document.body.dir=document.documentElement.dir;$("langBtn").textContent=language==="ar"?"EN":"عربي";updateSoundButton();document.querySelectorAll("[data-ar][data-en]").forEach(el=>el.textContent=el.dataset[language]);render();});
 updateSoundButton();
 if(load())$("continueBtn").classList.remove("hidden");
