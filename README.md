@@ -1,5 +1,12 @@
 # THE 11:11
 
+## Build 1.7
+- Fixed Chapter Three save restoration so completed progress resumes in the correct chapter.
+- Fixed starting a new game when an older save exists; the Continue option now appears after saving.
+- Hardened save loading against invalid or outdated clue data and invalid time values.
+- Corrected the Room 11 box clue so it matches the locked-box puzzle.
+- Reviewed HTML element references, JavaScript syntax, CSS rule balance and dynamic scene/clue mappings.
+
 ## Build 1.6
 - Completed Chapter Three, “The Final Truth,” with three new clues across the hotel.
 - Added the final truth-code puzzle (1103), a conclusive ending, and a replay option.
