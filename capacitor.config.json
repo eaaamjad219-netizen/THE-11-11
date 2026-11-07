@@ -1,7 +1,7 @@
 {
   "appId": "com.nightfallstudios.the1111",
   "appName": "THE 11:11",
-  "webDir": ".",
+  "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
     "androidScheme": "https"
