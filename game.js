@@ -94,7 +94,7 @@ function playSound(kind){
 }
 
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));$("saveStatus").textContent=t("● محفوظ","● Saved");}catch(e){$("saveStatus").textContent=t("● لم يُحفظ","● Not saved");}}
-function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.clues)||!sceneInfo[data.scene])return false;state={...initialState(),...data,keyFound:Boolean(data.keyFound)};state.roomUnlocked=state.clues.length>=4&&state.keyFound;return true;}catch(e){return false;}}
+function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.clues)||!sceneInfo[data.scene])return false;state={...initialState(),...data,keyFound:Boolean(data.keyFound)};state.roomUnlocked=state.clues.length>=4&&state.keyFound;if(!state.roomUnlocked&&state.scene==="room")state.scene="corridor";return true;}catch(e){return false;}}
 function formatClock(){const h=Math.floor(state.minutes/60)%24,m=state.minutes%60;const suffix=h>=12?"PM":"AM";return String(h%12||12).padStart(2,"0")+":"+String(m).padStart(2,"0")+" "+suffix;}
 function buildSceneDetails(){
  const art=$("sceneArt");
