@@ -1,5 +1,12 @@
 # THE 11:11
 
+## Build 1.4
+- Added a cinematic Chapter One ending overlay with a glowing 11:11 clock, the mysterious guest silhouette, and a bilingual story reveal.
+- Both Chapter One completion paths now lead into the same ending scene.
+- Added a clear handoff teaser for Chapter Two: The Forgotten Night.
+- Ending respects reduced-motion preferences and can be closed to return to the case notes.
+
+
 A browser-based mystery game prototype built with plain HTML, CSS and JavaScript.
 
 ## Run locally
