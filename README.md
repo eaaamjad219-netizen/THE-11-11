@@ -8,6 +8,14 @@ A browser-based mystery game prototype built with plain HTML, CSS and JavaScript
 
 No build tools or installation are required.
 
+## Build 0.5
+- Ambient lighting effects in the lobby and corridor, including soft glow drift, chandelier flicker and a moving light sweep.
+- Hotspots appear with a staggered entrance animation.
+- Dialogue panels and choice buttons animate when updated.
+- New evidence reveals with a subtle notebook animation.
+- The in-game clock animates on updates, and Room 11 gets a visual unlock pulse.
+- Motion effects respect reduced-motion accessibility preferences.
+
 ## Build 0.4
 - Cinematic transitions between the lobby, corridor and Room 11: brief fade-out, depth zoom, soft blur and a smooth scene reveal.
 - Navigation is temporarily locked during transitions to prevent overlapping scene changes.
