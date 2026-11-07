@@ -2,7 +2,7 @@
 "use strict";
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = "the1111-save-v2";
-const initialState = () => ({scene:"lobby",minutes:19*60,clues:[],roomUnlocked:false,keyFound:false,puzzleSolved:false,loop:1,finished:false,strangerMet:false,strangerAsked:false,chapter:1,chapter2Clues:[],chapter2Solved:false});
+const initialState = () => ({scene:"lobby",minutes:19*60,clues:[],roomUnlocked:false,keyFound:false,puzzleSolved:false,loop:1,finished:false,strangerMet:false,strangerAsked:false,chapter:1,chapter2Clues:[],chapter2Solved:false,chapter3Clues:[],chapter3Solved:false});
 let state = initialState();
 let language = "ar";
 let soundEnabled = false;
@@ -34,6 +34,16 @@ const chapterTwoSceneInfo = {
  lobby:{title:{ar:"الردهة — ذكرى قديمة",en:"Lobby — An Old Memory"},label:{ar:"الفصل الثاني · شريط التسجيل",en:"CHAPTER TWO · THE TAPE"},art:"lobby-art",hotspots:["tape"]},
  corridor:{title:{ar:"الممر — صفحة ممزقة",en:"Corridor — The Torn Page"},label:{ar:"الفصل الثاني · تقويم الفندق",en:"CHAPTER TWO · HOTEL CALENDAR"},art:"corridor-art",hotspots:["calendar"]},
  room:{title:{ar:"الغرفة 11 — المرآة",en:"Room 11 — The Mirror"},label:{ar:"الفصل الثاني · انعكاس لا يخصك",en:"CHAPTER TWO · A REFLECTION THAT ISN'T YOURS"},art:"room-art",hotspots:["mirror"]}
+};
+const chapterThreeSceneInfo = {
+ lobby:{title:{ar:"الردهة — السجل الأخير",en:"Lobby — The Final Register"},label:{ar:"الفصل الثالث · سجل المناوبة",en:"CHAPTER THREE · THE NIGHT REGISTER"},art:"lobby-art",hotspots:["register"]},
+ corridor:{title:{ar:"الممر — رسالة على الحائط",en:"Corridor — A Message on the Wall"},label:{ar:"الفصل الثالث · ما كتبته بنفسك",en:"CHAPTER THREE · YOUR OWN WORDS"},art:"corridor-art",hotspots:["message"]},
+ room:{title:{ar:"الغرفة 11 — الظرف الأخير",en:"Room 11 — The Last Envelope"},label:{ar:"الفصل الثالث · الحقيقة الأخيرة",en:"CHAPTER THREE · THE FINAL TRUTH"},art:"room-art",hotspots:["envelope"]}
+};
+const chapterThreeClues = {
+ register:{ar:"فتحت سجل المناوبة القديم. آخر اسم كتبه موظف الاستقبال هو اسمك، وتحت الاسم ملاحظة: «المناوبة الأخيرة — الغرفة 11». لم تكن نزيلاً عابراً؛ كنت تعمل هنا.",en:"You open the old night register. The last receptionist listed is you, followed by: “Final shift — Room 11.” You were not a passing guest; you worked here.",nameAr:"سجل المناوبة باسمك",nameEn:"Your name in the night register"},
+ message:{ar:"تحت طبقة الطلاء وجدت كلمات بخط يدك: «الساعة 11:11، ثم تاريخ الليلة 03». وتحتها: «أنا تركت الأدلة لنفسي كي أعود وأتذكر».",en:"Beneath the paint are words in your handwriting: “11:11, then the date of this night: 03.” Below that: “I left these clues for myself, so I could return and remember.”",nameAr:"رسالة بخط يدك",nameEn:"A message in your handwriting"},
+ envelope:{ar:"داخل الظرف صورة بطاقة موظفك القديمة وملاحظة أخيرة: «النزيل الذي تبحث عنه هو أنت. لم يكن الفندق يحبسك؛ أنت كنت تعود لأنك وعدت نفسك ألا تنسى ما حدث في مناوبتك الأخيرة: أنك اخترت إغلاق الفندق ومغادرته، لا البقاء فيه إلى الأبد».",en:"Inside is your old staff card and one final note: “The guest you are searching for is you. The hotel did not keep you here; you kept returning because you promised yourself not to forget your last shift: you chose to close the hotel and leave, not remain here forever.”",nameAr:"الظرف الأخير",nameEn:"The final envelope"}
 };
 const chapterTwoClues = {
  tape:{ar:"شغّلت الشريط. صوتك يهمس: «إذا سمعتني، لا تنظر إلى المرآة قبل أن تعرف الرقم الأول… الثالثة بعد منتصف الليل». ثم ينقطع التسجيل بصوت ثلاث دقات.",en:"You play the tape. Your own voice whispers: “If you can hear me, don't look into the mirror until you know the first number… three after midnight.” The recording ends with three knocks.",nameAr:"شريط بصوتك",nameEn:"A tape in your own voice"},
@@ -104,7 +114,7 @@ function playSound(kind){
 }
 
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));$("saveStatus").textContent=t("● محفوظ","● Saved");}catch(e){$("saveStatus").textContent=t("● لم يُحفظ","● Not saved");}}
-function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.clues)||!sceneInfo[data.scene])return false;state={...initialState(),...data,keyFound:Boolean(data.keyFound),puzzleSolved:Boolean(data.puzzleSolved),chapter:data.chapter===2?2:1,chapter2Clues:Array.isArray(data.chapter2Clues)?data.chapter2Clues:[],chapter2Solved:Boolean(data.chapter2Solved)};state.roomUnlocked=state.clues.length>=4&&state.keyFound;if(!state.roomUnlocked&&state.scene==="room")state.scene="corridor";return true;}catch(e){return false;}}
+function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.clues)||!sceneInfo[data.scene])return false;state={...initialState(),...data,keyFound:Boolean(data.keyFound),puzzleSolved:Boolean(data.puzzleSolved),chapter:data.chapter===2?2:1,chapter2Clues:Array.isArray(data.chapter2Clues)?data.chapter2Clues:[],chapter2Solved:Boolean(data.chapter2Solved),chapter3Clues:Array.isArray(data.chapter3Clues)?data.chapter3Clues:[],chapter3Solved:Boolean(data.chapter3Solved)};state.roomUnlocked=state.clues.length>=4&&state.keyFound;if(!state.roomUnlocked&&state.scene==="room")state.scene="corridor";return true;}catch(e){return false;}}
 function formatClock(){const h=Math.floor(state.minutes/60)%24,m=state.minutes%60;const suffix=h>=12?"PM":"AM";return String(h%12||12).padStart(2,"0")+":"+String(m).padStart(2,"0")+" "+suffix;}
 function buildSceneDetails(){
  const art=$("sceneArt");
@@ -122,28 +132,28 @@ function buildSceneDetails(){
  });
 }
 function render(){
- const info=state.chapter===2?chapterTwoSceneInfo[state.scene]:sceneInfo[state.scene];
- const heading=document.querySelector(".game-heading .eyebrow");heading.textContent=state.chapter===2?t("الفصل الثاني","CHAPTER TWO"):t("الفصل الأول","CHAPTER ONE");
+ const info=state.chapter===3?chapterThreeSceneInfo[state.scene]:(state.chapter===2?chapterTwoSceneInfo[state.scene]:sceneInfo[state.scene]);
+ const heading=document.querySelector(".game-heading .eyebrow");heading.textContent=state.chapter===3?t("الفصل الثالث","CHAPTER THREE"):(state.chapter===2?t("الفصل الثاني","CHAPTER TWO"):t("الفصل الأول","CHAPTER ONE"));
  $("sceneTitle").textContent=info.title[language];$("sceneLabel").textContent=info.label[language];const clock=$("clock");clock.classList.remove("clock-tick");clock.textContent=formatClock();void clock.offsetWidth;clock.classList.add("clock-tick");
  $("sceneArt").className="scene-art "+info.art;updateAmbienceScene();buildSceneDetails();
  $("sceneArt").querySelectorAll(".hotspot").forEach(el=>el.remove());
  const oldDoor=$("sceneArt").querySelector(".room-door");if(oldDoor)oldDoor.remove();
  if(state.scene==="room"){const door=document.createElement("div");door.className="room-door";door.setAttribute("aria-hidden","true");const panel=document.createElement("div");panel.className="door-panel";const handle=document.createElement("span");handle.className="door-handle";door.append(panel,handle);$("sceneArt").appendChild(door);window.setTimeout(()=>door.classList.add("door-opening"),180);}
- info.hotspots.forEach((id,index)=>{const b=document.createElement("button");b.className="hotspot "+({clock:"hs-clock",ledger:"hs-book",keys:"hs-keys",portrait:"hs-clock",scratch:"hs-book",box:"hs-keys",tape:"hs-tape",calendar:"hs-calendar",mirror:"hs-mirror"}[id]);b.style.animationDelay=`${index*110}ms, ${index*110+600}ms`;b.type="button";b.dataset.clue=id;b.setAttribute("aria-label",clues[id][language==="ar"?"nameAr":"nameEn"]);b.textContent=({clock:"⌚",ledger:"▤",keys:"⚿",portrait:"▧",scratch:"✎",box:"▣"}[id]);b.addEventListener("click",()=>inspect(id));$("sceneArt").appendChild(b);});
+ info.hotspots.forEach((id,index)=>{const b=document.createElement("button");b.className="hotspot "+({clock:"hs-clock",ledger:"hs-book",keys:"hs-keys",portrait:"hs-clock",scratch:"hs-book",box:"hs-keys",tape:"hs-tape",calendar:"hs-calendar",mirror:"hs-mirror"}[id]);b.style.animationDelay=`${index*110}ms, ${index*110+600}ms`;b.type="button";b.dataset.clue=id;b.setAttribute("aria-label",(state.chapter===3?chapterThreeClues[id]:(state.chapter===2?chapterTwoClues[id]:clues[id]))[language==="ar"?"nameAr":"nameEn"]);b.textContent=({clock:"⌚",ledger:"▤",keys:"⚿",portrait:"▧",scratch:"✎",box:"▣",register:"▤",message:"✎",envelope:"✉"}[id]);b.addEventListener("click",()=>inspect(id));$("sceneArt").appendChild(b);});
  if(state.chapter===1&&state.scene==="corridor"&&state.clues.length>=2&&!state.strangerMet){const stranger=document.createElement("button");stranger.type="button";stranger.className="stranger-figure";stranger.setAttribute("aria-label",t("تحدث مع النزيل المجهول","Talk to the unknown guest"));stranger.title=t("نزيل مجهول","Unknown guest");stranger.addEventListener("click",talkToStranger);$("sceneArt").appendChild(stranger);}if(state.chapter===1&&state.scene==="corridor"&&state.strangerMet&&!state.keyFound){const key=document.createElement("button");key.type="button";key.className="hotspot hs-key11";key.textContent="⚿";key.setAttribute("aria-label",t("افحص المفتاح رقم 11","Inspect key number 11"));key.title=t("المفتاح رقم 11","Key number 11");key.addEventListener("click",inspectKey11);$("sceneArt").appendChild(key);}
  document.querySelectorAll(".location-btn").forEach(b=>{b.classList.toggle("active",b.dataset.scene===state.scene);b.disabled=b.dataset.scene==="room"&&!state.roomUnlocked;b.classList.toggle("unlocked",b.dataset.scene==="room"&&state.roomUnlocked);});
- const activeClues=state.chapter===2?state.chapter2Clues:state.clues;
- const totalClues=state.chapter===2?3:6;
+ const activeClues=state.chapter===3?state.chapter3Clues:(state.chapter===2?state.chapter2Clues:state.clues);
+ const totalClues=state.chapter===1?6:3;
  $("clueCount").textContent=activeClues.length+" / "+totalClues;
  $("clueList").replaceChildren();
  if(!activeClues.length){const li=document.createElement("li");li.className="empty";li.textContent=t("لم تجمع أي دليل بعد.","No clues collected yet.");$("clueList").appendChild(li);}
- activeClues.forEach((id,index)=>{const li=document.createElement("li");li.style.animationDelay=`${index*65}ms`;li.textContent=(state.chapter===2?chapterTwoClues[id]:clues[id])[language==="ar"?"nameAr":"nameEn"];$("clueList").appendChild(li);});
+ activeClues.forEach((id,index)=>{const li=document.createElement("li");li.style.animationDelay=`${index*65}ms`;li.textContent=(state.chapter===3?chapterThreeClues[id]:(state.chapter===2?chapterTwoClues[id]:clues[id]))[language==="ar"?"nameAr":"nameEn"];$("clueList").appendChild(li);});
  $("progressText").textContent=Math.round(activeClues.length/totalClues*100)+"% · "+t("التحقيق","INVESTIGATION");
  $("continueBtn").classList.toggle("hidden",!localStorage.getItem(SAVE_KEY));
 }
 function say(text){const panel=document.querySelector(".dialogue-panel");panel.classList.remove("dialogue-updated");void panel.offsetWidth;panel.classList.add("dialogue-updated");$("speaker").textContent=t("ملاحظات المحقق","INVESTIGATOR'S NOTES");$("dialogue").textContent=text;$("choiceArea").replaceChildren();}
 function advanceTime(){const target=23*60+11;const next=state.minutes+17;if(state.minutes<target&&next>=target){state.minutes=target;say(t("توقفت الساعة عند 11:11. الهواء صار أثقل… كأن الفندق ينتظر منك قراراً.","The clock stops at 11:11. The air grows heavy… as if the hotel is waiting for your decision."));}else if(state.minutes>=target){state.minutes=19*60;state.loop++;state.scene="lobby";say(t("11:11… عاد كل شيء إلى البداية. لكن هذه المرة، ذاكرتك لم تُمحَ. الأدلة التي جمعتها ما زالت معك.","11:11… everything returned to the beginning. But this time, your memory survived. Your collected clues remain."));}else{state.minutes=next;}save();render();}
-function inspect(id){if(state.chapter===2){inspectChapterTwo(id);return;}if(!clues[id])return;playSound("clue");const c=clues[id];say(c[language]);if(!state.clues.includes(id)){state.clues.push(id);state.roomUnlocked=state.clues.length>=4&&state.keyFound;save();render();}
+function inspect(id){if(state.chapter===3){inspectChapterThree(id);return;}if(state.chapter===2){inspectChapterTwo(id);return;}if(!clues[id])return;playSound("clue");const c=clues[id];say(c[language]);if(!state.clues.includes(id)){state.clues.push(id);state.roomUnlocked=state.clues.length>=4&&state.keyFound;save();render();}
  if(id==="keys"||id==="scratch"){addChoice(t("اذهب إلى الممر","Go to the corridor"),()=>go("corridor"));}if(id==="box"){addChoice(t("افحص الصورة عن قرب","Examine the photograph closely"),showPhotoReveal);addChoice(t("حل لغز قفل الصندوق","Solve the box lock puzzle"),showRoomPuzzle);addChoice(t("حاول فهم الصورة","Try to understand the photograph"),()=>{if(state.clues.length===6&&state.puzzleSolved){showChapterOneEnding();}else if(state.clues.length===6&&!state.puzzleSolved){say(t("الأدلة الستة اكتملت، لكن الصندوق ما زال يخفي شيئاً. حل شفرة القفل أولاً.","All six clues are collected, but the box is still hiding something. Solve its lock first."));addChoice(t("حل لغز القفل","Solve the lock"),showRoomPuzzle);}else{say(t("هناك تفاصيل ناقصة. لا تزال بعض الأدلة خارج الصورة.","Something is missing. Some clues are still out of view."));}save();});}
  advanceTime();}
 function inspectKey11(){if(state.keyFound)return;state.keyFound=true;state.roomUnlocked=state.clues.length>=4;playSound("clue");say(t("وجدت المفتاح رقم 11 تحت طرف السجادة قرب الباب البعيد. عليه نقش صغير: «لا تفتح الغرفة قبل أن تتذكر».","You found key 11 beneath the edge of the runner near the far door. A small engraving reads: “Do not open the room until you remember.”"));save();render();if(state.roomUnlocked)addChoice(t("افتح الغرفة 11","Unlock Room 11"),()=>go("room"));else addChoice(t("واصل جمع الأدلة","Keep collecting clues"),()=>say(t("المفتاح صار معك، لكنك تحتاج إلى أربعة أدلة على الأقل قبل دخول الغرفة.","You have the key now, but you still need at least four clues before entering the room.")));advanceTime();}
@@ -243,8 +253,50 @@ function showChapterTwoEnding(){
  const title=document.createElement("h2");title.textContent=t("الوجه خلف المرآة","THE FACE BEHIND THE MIRROR");
  const message=document.createElement("p");message.textContent=t("انشقّ انعكاسك إلى صورتين. واحدة بقيت مكانك… والأخرى ابتسمت وكتبت على الزجاج: «أنا لست النزيل. أنا أنت… قبل أن تنسى». ثم انطفأت كل الأضواء.","Your reflection split in two. One stayed where you stood… the other smiled and wrote on the glass: “I am not the guest. I am you… before you forgot.” Then every light went out.");
  const note=document.createElement("p");note.className="ending-next";note.textContent=t("نهاية الفصل الثاني — الفصل الثالث: الحقيقة الأخيرة","CHAPTER TWO COMPLETE — CHAPTER THREE: THE FINAL TRUTH");
+ const next=document.createElement("button");next.className="ending-close";next.type="button";next.textContent=t("ابدأ الفصل الثالث","Begin Chapter Three");next.addEventListener("click",startChapterThree);
  const close=document.createElement("button");close.className="ending-close";close.type="button";close.textContent=t("العودة إلى دفتر الأدلة","Return to case notes");close.addEventListener("click",()=>overlay.remove());
- content.append(eyebrow,title,message,note,close);overlay.append(clock,silhouette,content);art.appendChild(overlay);close.focus();
+ content.append(eyebrow,title,message,note,next,close);overlay.append(clock,silhouette,content);art.appendChild(overlay);close.focus();
+}
+function startChapterThree(){
+ const ending=$("sceneArt").querySelector(".chapter-ending");if(ending)ending.remove();
+ state.chapter=3;state.chapter3Clues=[];state.chapter3Solved=false;state.finished=false;state.scene="lobby";state.minutes=20*60;save();render();
+ say(t("تُفتح الردهة من جديد. هذه المرة تجد سجل المناوبة مفتوحاً على صفحة تحمل اسمك. لم يعد أمامك إلا أن تعرف لماذا كنت تعود كل ليلة.","The lobby opens again. This time, the night register is open to a page bearing your name. Now you only need to discover why you kept returning."));
+}
+function inspectChapterThree(id){
+ const clue=chapterThreeClues[id];if(!clue)return;
+ playSound("photo");say(clue[language]);
+ if(!state.chapter3Clues.includes(id)){state.chapter3Clues.push(id);save();render();}
+ if(id==="register")addChoice(t("اذهب إلى الممر وافحص الكتابة","Go to the corridor and inspect the writing"),()=>go("corridor"));
+ if(id==="message")addChoice(t("ادخل الغرفة 11 وافحص الظرف","Enter Room 11 and inspect the envelope"),()=>go("room"));
+ if(id==="envelope"){
+  if(state.chapter3Clues.length===3)addChoice(t("افتح قفل الذاكرة","Open the memory lock"),showChapterThreePuzzle);
+  else addChoice(t("راجع الأدلة الناقصة","Review the missing clues"),()=>say(t("السجل يثبت أنك كنت موظفاً، والرسالة تعطي ترتيب الأرقام. اجمع الأدلة الثلاثة أولاً.","The register proves you worked here, and the message gives the number order. Collect all three clues first.")));
+ }
+}
+function showChapterThreePuzzle(){
+ say(t("القفل الأخير يطلب أربعة أرقام. الرسالة قالت: الوقت أولاً، ثم تاريخ الليلة. اجمع 11:11 مع 03 بالترتيب، من دون نقطتين أو شرطة.","The final lock asks for four digits. The message says: time first, then the night’s date. Combine 11:11 and 03 in that order, without punctuation."));
+ const form=document.createElement("form");form.className="puzzle-form";
+ const label=document.createElement("label");label.className="puzzle-label";label.textContent=t("شفرة الحقيقة","TRUTH CODE");label.htmlFor="truthCode";
+ const input=document.createElement("input");input.id="truthCode";input.className="puzzle-input";input.type="text";input.inputMode="numeric";input.maxLength=4;input.pattern="[0-9]{4}";input.placeholder="••••";input.required=true;
+ const submit=document.createElement("button");submit.className="choice-btn";submit.type="submit";submit.textContent=t("اكشف الحقيقة","Reveal the truth");
+ form.append(label,input,submit);
+ form.addEventListener("submit",event=>{event.preventDefault();if(input.value.trim()==="1103"){state.chapter3Solved=true;state.finished=true;save();showChapterThreeEnding();}else{playSound("move");say(t("القفل لم يفتح. راجع الرسالة: الوقت أولاً، ثم تاريخ الليلة.","The lock stays shut. Recheck the message: time first, then the date of the night."));addChoice(t("حاول مرة أخرى","Try again"),showChapterThreePuzzle);}});
+ $("choiceArea").appendChild(form);input.focus();
+}
+function showChapterThreeEnding(){
+ state.chapter3Solved=true;state.finished=true;save();playSound("door");
+ const art=$("sceneArt");const old=art.querySelector(".chapter-ending");if(old)old.remove();
+ const overlay=document.createElement("div");overlay.className="chapter-ending chapter-three-ending";overlay.setAttribute("role","dialog");overlay.setAttribute("aria-modal","true");overlay.setAttribute("aria-label",t("نهاية اللعبة","Game ending"));
+ const clock=document.createElement("div");clock.className="ending-clock";clock.textContent="11:11";
+ const silhouette=document.createElement("div");silhouette.className="ending-silhouette";silhouette.setAttribute("aria-hidden","true");
+ const content=document.createElement("div");content.className="ending-content";
+ const eyebrow=document.createElement("div");eyebrow.className="ending-eyebrow";eyebrow.textContent=t("THE 11:11 · النهاية","THE 11:11 · THE END");
+ const title=document.createElement("h2");title.textContent=t("الحقيقة الأخيرة","THE FINAL TRUTH");
+ const message=document.createElement("p");message.textContent=t("تذكّرت الآن: كنت موظف الاستقبال في الفندق، والنزيل الذي كان يظهر لك هو صورتك القديمة التي تركتها في تلك الليلة. أغلقت الفندق وغادرت، لكنك لم تستطع نسيان وعدك لنفسك. لم تكن الساعة تحبسك؛ كانت الأدلة تقودك إلى الحقيقة. عند 11:11، وضعت المفتاح على المكتب وخرجت أخيراً. هذه المرة لن تعود.","Now you remember: you were the hotel receptionist, and the guest who appeared was the memory of who you had been that night. You closed the hotel and left, but could not forget the promise you made to yourself. The clock never trapped you; the clues led you back to the truth. At 11:11, you place the key on the desk and finally walk out. This time, you will not return.");
+ const note=document.createElement("p");note.className="ending-next";note.textContent=t("اكتملت القصة — THE 11:11","STORY COMPLETE — THE 11:11");
+ const restart=document.createElement("button");restart.className="ending-close";restart.type="button";restart.textContent=t("ابدأ القصة من جديد","Play the story again");restart.addEventListener("click",()=>{state=initialState();save();render();overlay.remove();say(t("ليلة جديدة تبدأ… هذه المرة أنت تعرف الحقيقة.","A new night begins… this time, you know the truth."));});
+ const close=document.createElement("button");close.className="ending-close";close.type="button";close.textContent=t("عرض النهاية","View ending");close.addEventListener("click",()=>overlay.remove());
+ content.append(eyebrow,title,message,note,restart,close);overlay.append(clock,silhouette,content);art.appendChild(overlay);close.focus();
 }
 function showPhotoReveal(){
  playSound("photo");
@@ -258,8 +310,8 @@ function showPhotoReveal(){
  card.append(image,caption,date);veil.append(close,card);art.appendChild(veil);close.focus();
 }
 function addChoice(label,fn){const b=document.createElement("button");b.className="choice-btn";b.type="button";b.textContent=label;b.addEventListener("click",fn);$("choiceArea").appendChild(b);}
-function go(scene){if(!sceneInfo[scene]||(scene==="room"&&!state.roomUnlocked)||scene===state.scene||document.body.classList.contains("scene-transitioning"))return;playSound("move");if(scene==="room")playSound("door");const art=$("sceneArt");document.body.classList.add("scene-transitioning");art.classList.remove("scene-entering");art.classList.add("scene-leaving");window.setTimeout(()=>{state.scene=scene;advanceTime();say(sceneInfo[state.scene].title[language]);art.classList.remove("scene-leaving");art.classList.add("scene-entering");window.setTimeout(()=>{art.classList.remove("scene-entering");document.body.classList.remove("scene-transitioning");},680);},240);}
-function start(){if(!load())state=initialState();$("startScreen").classList.add("hidden");$("gameScreen").classList.remove("hidden");render();if(state.chapter===2&&state.chapter2Solved)showChapterTwoEnding();else if(state.chapter===1&&state.finished)showChapterOneEnding();else say(state.chapter===2?t("رجعت إلى الليلة المنسية. الشريط ما زال يعمل…","You have returned to the forgotten night. The tape is still playing…"):t("وصلت إلى الفندق قبل الغروب بقليل. المكان هادئ أكثر من اللازم… وهناك شيء غير طبيعي في هذه الليلة.","I arrived just before sunset. The place is too quiet… something feels wrong tonight."));}
+function go(scene){if(!sceneInfo[scene]||(scene==="room"&&!state.roomUnlocked)||scene===state.scene||document.body.classList.contains("scene-transitioning"))return;playSound("move");if(scene==="room")playSound("door");const art=$("sceneArt");document.body.classList.add("scene-transitioning");art.classList.remove("scene-entering");art.classList.add("scene-leaving");window.setTimeout(()=>{state.scene=scene;advanceTime();say((state.chapter===3?chapterThreeSceneInfo[state.scene]:(state.chapter===2?chapterTwoSceneInfo[state.scene]:sceneInfo[state.scene])).title[language]);art.classList.remove("scene-leaving");art.classList.add("scene-entering");window.setTimeout(()=>{art.classList.remove("scene-entering");document.body.classList.remove("scene-transitioning");},680);},240);}
+function start(){if(!load())state=initialState();$("startScreen").classList.add("hidden");$("gameScreen").classList.remove("hidden");render();if(state.chapter===3&&state.chapter3Solved)showChapterThreeEnding();else if(state.chapter===2&&state.chapter2Solved)showChapterTwoEnding();else if(state.chapter===1&&state.finished)showChapterOneEnding();else say(state.chapter===3?t("هذه هي مناوبتك الأخيرة. اجمع الأدلة الثلاثة، ثم واجه الحقيقة في الغرفة 11.","This is your final shift. Collect the three clues, then face the truth in Room 11."):state.chapter===2?t("رجعت إلى الليلة المنسية. الشريط ما زال يعمل…","You have returned to the forgotten night. The tape is still playing…"):t("وصلت إلى الفندق قبل الغروب بقليل. المكان هادئ أكثر من اللازم… وهناك شيء غير طبيعي في هذه الليلة.","I arrived just before sunset. The place is too quiet… something feels wrong tonight."));}
 $("startBtn").addEventListener("click",()=>{state=initialState();start();save();});
 $("continueBtn").addEventListener("click",()=>start());
 document.querySelectorAll(".location-btn").forEach(b=>b.addEventListener("click",()=>go(b.dataset.scene)));
