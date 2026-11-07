@@ -23,6 +23,11 @@ jobs:
           java-version: 17
       - name: Install dependencies
         run: npm install
+      - name: Prepare web assets
+        run: |
+          mkdir -p www
+          cp index.html style.css game.js www/
+          cp -r assets www/assets
       - name: Create Android project
         run: npx cap add android
       - name: Sync web game
