@@ -2,7 +2,7 @@
 "use strict";
 const $ = (id) => document.getElementById(id);
 const SAVE_KEY = "the1111-save-v2";
-const initialState = () => ({scene:"lobby",minutes:19*60,clues:[],roomUnlocked:false,keyFound:false,loop:1,finished:false,strangerMet:false,strangerAsked:false});
+const initialState = () => ({scene:"lobby",minutes:19*60,clues:[],roomUnlocked:false,keyFound:false,puzzleSolved:false,loop:1,finished:false,strangerMet:false,strangerAsked:false});
 let state = initialState();
 let language = "ar";
 let soundEnabled = false;
@@ -94,7 +94,7 @@ function playSound(kind){
 }
 
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));$("saveStatus").textContent=t("● محفوظ","● Saved");}catch(e){$("saveStatus").textContent=t("● لم يُحفظ","● Not saved");}}
-function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.clues)||!sceneInfo[data.scene])return false;state={...initialState(),...data,keyFound:Boolean(data.keyFound)};state.roomUnlocked=state.clues.length>=4&&state.keyFound;if(!state.roomUnlocked&&state.scene==="room")state.scene="corridor";return true;}catch(e){return false;}}
+function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!data||!Array.isArray(data.clues)||!sceneInfo[data.scene])return false;state={...initialState(),...data,keyFound:Boolean(data.keyFound),puzzleSolved:Boolean(data.puzzleSolved)};state.roomUnlocked=state.clues.length>=4&&state.keyFound;if(!state.roomUnlocked&&state.scene==="room")state.scene="corridor";return true;}catch(e){return false;}}
 function formatClock(){const h=Math.floor(state.minutes/60)%24,m=state.minutes%60;const suffix=h>=12?"PM":"AM";return String(h%12||12).padStart(2,"0")+":"+String(m).padStart(2,"0")+" "+suffix;}
 function buildSceneDetails(){
  const art=$("sceneArt");
@@ -130,7 +130,7 @@ function render(){
 function say(text){const panel=document.querySelector(".dialogue-panel");panel.classList.remove("dialogue-updated");void panel.offsetWidth;panel.classList.add("dialogue-updated");$("speaker").textContent=t("ملاحظات المحقق","INVESTIGATOR'S NOTES");$("dialogue").textContent=text;$("choiceArea").replaceChildren();}
 function advanceTime(){const target=23*60+11;const next=state.minutes+17;if(state.minutes<target&&next>=target){state.minutes=target;say(t("توقفت الساعة عند 11:11. الهواء صار أثقل… كأن الفندق ينتظر منك قراراً.","The clock stops at 11:11. The air grows heavy… as if the hotel is waiting for your decision."));}else if(state.minutes>=target){state.minutes=19*60;state.loop++;state.scene="lobby";say(t("11:11… عاد كل شيء إلى البداية. لكن هذه المرة، ذاكرتك لم تُمحَ. الأدلة التي جمعتها ما زالت معك.","11:11… everything returned to the beginning. But this time, your memory survived. Your collected clues remain."));}else{state.minutes=next;}save();render();}
 function inspect(id){if(!clues[id])return;playSound("clue");const c=clues[id];say(c[language]);if(!state.clues.includes(id)){state.clues.push(id);state.roomUnlocked=state.clues.length>=4&&state.keyFound;save();render();}
- if(id==="keys"||id==="scratch"){addChoice(t("اذهب إلى الممر","Go to the corridor"),()=>go("corridor"));}if(id==="box"){addChoice(t("افحص الصورة عن قرب","Examine the photograph closely"),showPhotoReveal);addChoice(t("حاول فهم الصورة","Try to understand the photograph"),()=>{if(state.clues.length===6){say(t("تتطابق الصور الستّ في دفتر الأدلة. لم تكن تائهًا في الفندق؛ كنت تحاول تذكّر ما حدث في الليلة الأولى. تظهر على ظهر الصورة الأخيرة عبارة: «اخرج قبل أن تدق الساعة مرة أخرى». انتهى الفصل الأول.","The six photographs align in your case notes. You were never lost in the hotel; you were trying to remember the first night. On the back of the final photo: “Leave before the clock strikes again.” CHAPTER ONE COMPLETE."));state.finished=true;}else{say(t("هناك تفاصيل ناقصة. لا تزال بعض الأدلة خارج الصورة.","Something is missing. Some clues are still out of view."));}save();});}
+ if(id==="keys"||id==="scratch"){addChoice(t("اذهب إلى الممر","Go to the corridor"),()=>go("corridor"));}if(id==="box"){addChoice(t("افحص الصورة عن قرب","Examine the photograph closely"),showPhotoReveal);addChoice(t("حل لغز قفل الصندوق","Solve the box lock puzzle"),showRoomPuzzle);addChoice(t("حاول فهم الصورة","Try to understand the photograph"),()=>{if(state.clues.length===6&&state.puzzleSolved){say(t("تتطابق الصور الستّ في دفتر الأدلة. لم تكن تائهًا في الفندق؛ كنت تحاول تذكّر ما حدث في الليلة الأولى. تظهر على ظهر الصورة الأخيرة عبارة: «اخرج قبل أن تدق الساعة مرة أخرى». انتهى الفصل الأول.","The six photographs align in your case notes. You were never lost in the hotel; you were trying to remember the first night. On the back of the final photo: “Leave before the clock strikes again.” CHAPTER ONE COMPLETE."));state.finished=true;}else if(state.clues.length===6&&!state.puzzleSolved){say(t("الأدلة الستة اكتملت، لكن الصندوق ما زال يخفي شيئاً. حل شفرة القفل أولاً.","All six clues are collected, but the box is still hiding something. Solve its lock first."));addChoice(t("حل لغز القفل","Solve the lock"),showRoomPuzzle);}else{say(t("هناك تفاصيل ناقصة. لا تزال بعض الأدلة خارج الصورة.","Something is missing. Some clues are still out of view."));}save();});}
  advanceTime();}
 function inspectKey11(){if(state.keyFound)return;state.keyFound=true;state.roomUnlocked=state.clues.length>=4;playSound("clue");say(t("وجدت المفتاح رقم 11 تحت طرف السجادة قرب الباب البعيد. عليه نقش صغير: «لا تفتح الغرفة قبل أن تتذكر».","You found key 11 beneath the edge of the runner near the far door. A small engraving reads: “Do not open the room until you remember.”"));save();render();if(state.roomUnlocked)addChoice(t("افتح الغرفة 11","Unlock Room 11"),()=>go("room"));else addChoice(t("واصل جمع الأدلة","Keep collecting clues"),()=>say(t("المفتاح صار معك، لكنك تحتاج إلى أربعة أدلة على الأقل قبل دخول الغرفة.","You have the key now, but you still need at least four clues before entering the room.")));advanceTime();}
 function strangerLine(text){say(text);$("speaker").textContent=t("النزيل المجهول","THE UNKNOWN GUEST");}
@@ -156,6 +156,27 @@ function talkToStranger(){
    strangerLine(t("لا تثق بي… ولا بالساعة. ثق بالأدلة التي جمعتها بنفسك.","Do not trust me… and do not trust the clock. Trust the clues you found yourself."));
   });
  });
+}
+function showRoomPuzzle(){
+ if(state.puzzleSolved){say(t("القفل مفتوح بالفعل. الأرقام الأربعة كانت أمامك طوال الوقت.","The lock is already open. The four digits were in front of you all along."));return;}
+ say(t("على قفل الصندوق أربعة خانات. تقول الملاحظة: «الساعة متوقفة عند وقت واحد، والخدوش تكرره. اكتب الوقت أربعة أرقام دون النقطتين».","The box has a four-digit lock. A note reads: “The clock stopped at one time, and the scratches repeat it. Enter that time as four digits, without the colon.”"));
+ const form=document.createElement("form");form.className="puzzle-form";
+ const label=document.createElement("label");label.className="puzzle-label";label.textContent=t("شفرة الصندوق","BOX CODE");label.htmlFor="roomCode";
+ const input=document.createElement("input");input.id="roomCode";input.className="puzzle-input";input.type="text";input.inputMode="numeric";input.autocomplete="off";input.maxLength=4;input.pattern="[0-9]{4}";input.placeholder="••••";input.setAttribute("aria-label",t("أدخل أربعة أرقام","Enter four digits"));input.required=true;
+ const submit=document.createElement("button");submit.className="choice-btn";submit.type="submit";submit.textContent=t("جرّب الشفرة","Try code");
+ form.append(label,input,submit);
+ form.addEventListener("submit",event=>{
+  event.preventDefault();const code=input.value.trim();
+  if(code==="1111"){
+   state.puzzleSolved=true;save();playSound("clue");
+   say(t("صدر صوت نقرة… وانفتح القفل. في داخل الصندوق شريط ورقي صغير: «لم تكن تبحث عن الغرفة 11… بل عن الليلة التي نسيتها».","A click… the lock opens. Inside is a narrow strip of paper: “You were not searching for Room 11… you were searching for the night you forgot.”"));
+   addChoice(t("راجع الصورة الأخيرة","Review the final photograph"),()=>{if(state.clues.length===6){say(t("تتطابق الصور الستّ الآن. على ظهر الصورة الأخيرة تظهر العبارة: «اخرج قبل أن تدق الساعة مرة أخرى». انتهى الفصل الأول.","The six photographs now align. On the back of the final photo: “Leave before the clock strikes again.” CHAPTER ONE COMPLETE."));state.finished=true;save();}else say(t("الشفرة صحيحة. ما زالت هناك أدلة أخرى تنتظرك.","The code is correct. More clues are still waiting for you."));});
+  }else{
+   playSound("move");say(t("الشفرة غير صحيحة. تذكّر: هناك دليل في الردهة ودليل على جدار الممر.","That code is incorrect. Remember: one clue is in the lobby and another is on the corridor wall."));
+   addChoice(t("حاول مرة أخرى","Try again"),showRoomPuzzle);
+  }
+ });
+ $("choiceArea").appendChild(form);input.focus();
 }
 function showPhotoReveal(){
  playSound("photo");
