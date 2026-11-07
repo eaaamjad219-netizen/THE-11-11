@@ -36,7 +36,7 @@ function render(){
  $("continueBtn").classList.toggle("hidden",!localStorage.getItem(SAVE_KEY));
 }
 function say(text){$("speaker").textContent=t("ملاحظات المحقق","INVESTIGATOR'S NOTES");$("dialogue").textContent=text;$("choiceArea").replaceChildren();}
-function advanceTime(){state.minutes+=17;if(state.minutes>=23*60+11){state.minutes=19*60;state.loop++;state.scene="lobby";say(t("11:11… عاد كل شيء إلى البداية. لكن هذه المرة، ذاكرتك لم تُمحَ. الأدلة التي جمعتها ما زالت معك.","11:11… everything returned to the beginning. But this time, your memory survived. Your collected clues remain."));}save();render();}
+function advanceTime(){state.minutes+=17;if(state.minutes>23*60+11){state.minutes=19*60;state.loop++;state.scene="lobby";say(t("11:11… عاد كل شيء إلى البداية. لكن هذه المرة، ذاكرتك لم تُمحَ. الأدلة التي جمعتها ما زالت معك.","11:11… everything returned to the beginning. But this time, your memory survived. Your collected clues remain."));}save();render();}
 function inspect(id){if(!clues[id])return;const c=clues[id];say(c[language]);if(!state.clues.includes(id)){state.clues.push(id);if(id==="keys"){state.roomUnlocked=true;}if(id==="scratch"){state.roomUnlocked=true;}save();render();}
  if(id==="keys"||id==="scratch"){addChoice(t("اذهب إلى الممر","Go to the corridor"),()=>go("corridor"));}if(id==="box"){addChoice(t("حاول فهم الصورة","Try to understand the photograph"),()=>{say(t("تسمع صوتاً خلفك يهمس: «هذه ليست المرة الأولى». ثم تدق الساعة… 11:11.","A voice behind you whispers: “This is not the first time.” Then the clock strikes… 11:11."));state.finished=true;save();});}
  advanceTime();}
