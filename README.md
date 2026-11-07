@@ -1,5 +1,12 @@
 # THE 11:11
 
+## Build 1.5
+- Added a playable Chapter Two, “The Forgotten Night,” unlocked from the Chapter One ending.
+- Introduced three new clues: a tape recording in the lobby, a torn calendar page in the corridor, and strange digits in Room 11's mirror.
+- Added a four-digit mirror puzzle (0311) and a new bilingual cinematic cliffhanger.
+- Chapter Two progress is saved separately and restored when continuing a saved game.
+
+
 ## Build 1.4
 - Added a cinematic Chapter One ending overlay with a glowing 11:11 clock, the mysterious guest silhouette, and a bilingual story reveal.
 - Both Chapter One completion paths now lead into the same ending scene.
