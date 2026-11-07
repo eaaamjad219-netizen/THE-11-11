@@ -42,7 +42,7 @@ const chapterThreeSceneInfo = {
 };
 const chapterThreeClues = {
  register:{ar:"فتحت سجل المناوبة القديم. آخر اسم كتبه موظف الاستقبال هو اسمك، وتحت الاسم ملاحظة: «المناوبة الأخيرة — الغرفة 11». لم تكن نزيلاً عابراً؛ كنت تعمل هنا.",en:"You open the old night register. The last receptionist listed is you, followed by: “Final shift — Room 11.” You were not a passing guest; you worked here.",nameAr:"سجل المناوبة باسمك",nameEn:"Your name in the night register"},
- message:{ar:"تحت طبقة الطلاء وجدت كلمات بخط يدك: «الساعة 11:11، ثم تاريخ الليلة 03». وتحتها: «أنا تركت الأدلة لنفسي كي أعود وأتذكر».",en:"Beneath the paint are words in your handwriting: “11:11, then the date of this night: 03.” Below that: “I left these clues for myself, so I could return and remember.”",nameAr:"رسالة بخط يدك",nameEn:"A message in your handwriting"},
+ message:{ar:"تحت طبقة الطلاء وجدت كلمات بخط يدك: «أول رقمين من الوقت 11:11، ثم تاريخ الليلة 03». وتحتها: «أنا تركت الأدلة لنفسي كي أعود وأتذكر».",en:"Beneath the paint are words in your handwriting: “The first two digits of 11:11, then the date of this night: 03.” Below that: “I left these clues for myself, so I could return and remember.”",nameAr:"رسالة بخط يدك",nameEn:"A message in your handwriting"},
  envelope:{ar:"داخل الظرف صورة بطاقة موظفك القديمة وملاحظة أخيرة: «النزيل الذي تبحث عنه هو أنت. لم يكن الفندق يحبسك؛ أنت كنت تعود لأنك وعدت نفسك ألا تنسى ما حدث في مناوبتك الأخيرة: أنك اخترت إغلاق الفندق ومغادرته، لا البقاء فيه إلى الأبد».",en:"Inside is your old staff card and one final note: “The guest you are searching for is you. The hotel did not keep you here; you kept returning because you promised yourself not to forget your last shift: you chose to close the hotel and leave, not remain here forever.”",nameAr:"الظرف الأخير",nameEn:"The final envelope"}
 };
 const chapterTwoClues = {
@@ -274,7 +274,7 @@ function inspectChapterThree(id){
  }
 }
 function showChapterThreePuzzle(){
- say(t("القفل الأخير يطلب أربعة أرقام. الرسالة قالت: الوقت أولاً، ثم تاريخ الليلة. اجمع 11:11 مع 03 بالترتيب، من دون نقطتين أو شرطة.","The final lock asks for four digits. The message says: time first, then the night’s date. Combine 11:11 and 03 in that order, without punctuation."));
+ say(t("القفل الأخير يطلب أربعة أرقام. الرسالة قالت: الوقت أولاً، ثم تاريخ الليلة. خذ أول رقمين من 11:11، ثم أضف 03 بالترتيب.","The final lock asks for four digits. The message says: time first, then the night’s date. Take the first two digits of 11:11, then add 03 in that order."));
  const form=document.createElement("form");form.className="puzzle-form";
  const label=document.createElement("label");label.className="puzzle-label";label.textContent=t("شفرة الحقيقة","TRUTH CODE");label.htmlFor="truthCode";
  const input=document.createElement("input");input.id="truthCode";input.className="puzzle-input";input.type="text";input.inputMode="numeric";input.maxLength=4;input.pattern="[0-9]{4}";input.placeholder="••••";input.required=true;
