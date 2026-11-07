@@ -1,5 +1,10 @@
 # THE 11:11
 
+## Download
+- [Download the latest game files (ZIP)](https://github.com/eaaamjad219-netizen/THE-11-11/archive/refs/heads/main.zip)
+- [Play the game online](https://eaaamjad219-netizen.github.io/THE-11-11/)
+
+
 ## Build 1.8
 - Added the game's cover artwork to the start screen.
 - Updated the visible build number to 1.8.
